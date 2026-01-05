@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Crime Prediction Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<div class="container">
+    {% if message %}
+    <h2>{{ message }}</h2>
+    {% else %}
+    <h2>Prediction Result for {{ district }} ({{ year }})</h2>
+    <p><b>Predicted Cluster:</b> {{ cluster }}</p>
+    <p>(0 = Safe, 1 = Moderate, 2 = Unsafe)</p>
+
+    <h3>Crime Data Table</h3>
+    {{ table | safe }}
+
+    <h3>Crime Chart</h3>
+    <img src="data:image/png;base64,{{ chart }}" alt="Crime Chart">
+    {% endif %}
+
+    <a href="/">⬅ Back</a>
+</div>
+</body>
+</html>

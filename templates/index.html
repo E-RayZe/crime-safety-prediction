@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Crime Safety Prediction</title>
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+</head>
+
+<body>
+<div class="container">
+  <h1>Crime Safety Prediction System</h1>
+
+  <!-- ================= FORM ================= -->
+  <form action="/predict" method="POST">
+
+    <label>State:</label>
+    <select name="state" id="state" required>
+      <option value="">Select State</option>
+      {% for s in states %}
+        <option value="{{ s }}">{{ s }}</option>
+      {% endfor %}
+    </select>
+
+    <label>District:</label>
+    <select name="district" id="district" required>
+      <option value="">Select District</option>
+      {% for d in districts %}
+        <option value="{{ d }}">{{ d }}</option>
+      {% endfor %}
+    </select>
+
+    <label>Year:</label>
+    <select name="year" required>
+      <option value="">Select Year</option>
+      {% for y in range(2013, 2027) %}
+        <option value="{{ y }}">{{ y }}</option>
+      {% endfor %}
+    </select>
+
+    <button type="submit">Predict</button>
+  </form>
+
+  <!-- ================= RESULT ================= -->
+  {% if result %}
+  <div class="result-box" style="background-color: {{ color }}">
+    <h2>{{ result }}</h2>
+  </div>
+  {% endif %}
+
+  <!-- ================= TABLE ================= -->
+  {% if table_data %}
+  <h3>Crime Data Table</h3>
+  <table>
+    <thead>
+      <tr>
+        {% for k in table_data.keys() %}
+          <th>{{ k }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        {% for v in table_data.values() %}
+          <td>{{ v }}</td>
+        {% endfor %}
+      </tr>
+    </tbody>
+  </table>
+  {% endif %}
+
+  <!-- ================= OVERALL BAR CHART ================= -->
+  {% if bar_chart_data %}
+  <h3>Overall Crime Distribution (Predicted)</h3>
+  <canvas id="barChart"></canvas>
+
+  <script>
+    const barCtx = document.getElementById('barChart').getContext('2d');
+
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: {{ bar_chart_data.keys() | list | safe }},
+        datasets: [{
+          label: 'Crime Count',
+          data: {{ bar_chart_data.values() | list | safe }},
+          backgroundColor: 'rgba(30,136,229,0.7)',
+          borderColor: '#1e88e5',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: {
+            ticks: {
+              color: '#000',
+              maxRotation: 90,
+              minRotation: 90
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { color: '#000' }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { color: '#000' }
+          },
+          datalabels: {
+            color: '#000',
+            anchor: 'end',
+            align: 'end',
+            font: {
+              weight: 'bold',
+              size: 11
+            }
+          }
+        }
+      },
+      plugins: [ChartDataLabels]
+    });
+  </script>
+  {% endif %}
+
+  <!-- ================= CRIME TYPE LINE CHART ================= -->
+  {% if crime_trend_data %}
+  <h3>Crime-Type Trend (2001–2026)</h3>
+
+  <select id="crimeSelect">
+    {% for c in crimes %}
+      <option value="{{ c }}">{{ c }}</option>
+    {% endfor %}
+  </select>
+
+  <canvas id="crimeLineChart" style="margin-top:20px;"></canvas>
+
+  <script>
+    const crimeTrendData = {{ crime_trend_data | tojson }};
+    const ctx2 = document.getElementById('crimeLineChart').getContext('2d');
+    let lineChart;
+
+    function drawLine(crime) {
+      const d = crimeTrendData[crime];
+
+      if (lineChart) lineChart.destroy();
+
+      lineChart = new Chart(ctx2, {
+        type: 'line',
+        data: {
+          labels: d.years,
+          datasets: [{
+            label: crime,
+            data: d.values,
+            borderColor: '#d81b60',
+            backgroundColor: 'rgba(216,27,96,0.2)',
+            tension: 0.4,
+            fill: true,
+            pointRadius: 3
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            x: { ticks: { color: '#000' } },
+            y: { beginAtZero: true, ticks: { color: '#000' } }
+          },
+          plugins: {
+            legend: { labels: { color: '#000' } }
+          }
+        }
+      });
+    }
+
+    const select = document.getElementById('crimeSelect');
+    drawLine(select.value);
+    select.addEventListener('change', () => drawLine(select.value));
+  </script>
+  {% endif %}
+
+</div>
+
+<!-- ================= AJAX ================= -->
+<script>
+const stateSelect = document.getElementById('state');
+const districtSelect = document.getElementById('district');
+
+stateSelect.addEventListener('change', () => {
+  fetch('/get_districts', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: `state=${encodeURIComponent(stateSelect.value)}`
+  })
+  .then(res => res.json())
+  .then(data => {
+    districtSelect.innerHTML = '<option value="">Select District</option>';
+    data.districts.forEach(d => {
+      const opt = document.createElement('option');
+      opt.value = d;
+      opt.text = d;
+      districtSelect.add(opt);
+    });
+  });
+});
+</script>
+
+</body>
+</html>

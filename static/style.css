@@ -1,0 +1,161 @@
+/* ===============================
+   GLOBAL BODY STYLE
+================================ */
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298); 
+  /* Dark + soft blue background */
+  color: #e5e7eb;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 30px;
+  margin: 0;
+}
+
+/* ===============================
+   MAIN CONTAINER (PAGE CARD)
+================================ */
+.container {
+  background: linear-gradient(180deg, #e3f2fd, #bbdefb);
+  /* Light blue main page */
+  padding: 26px;
+  border-radius: 16px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.35);
+  width: 90%;
+  max-width: 1000px;
+  text-align: center;
+  color: #0f172a;
+}
+
+/* ===============================
+   HEADINGS
+================================ */
+h1 {
+  margin-bottom: 20px;
+  color: #0d47a1;
+  font-weight: 700;
+}
+
+h3 {
+  margin-top: 26px;
+  color: #0f172a;
+}
+
+/* ===============================
+   FORM LABELS & INPUTS
+================================ */
+label {
+  display: block;
+  margin-top: 12px;
+  color: #1e3a8a;
+  font-weight: 600;
+  text-align: left;
+}
+
+select, input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 6px;
+  border-radius: 8px;
+  border: 1px solid #90caf9;
+  outline: none;
+  font-size: 14px;
+  background: #f8fbff;
+  color: #0f172a;
+}
+
+select:focus, input:focus {
+  border-color: #1e88e5;
+  box-shadow: 0 0 0 2px rgba(30,136,229,0.35);
+}
+
+/* ===============================
+   BUTTON
+================================ */
+button {
+  margin-top: 18px;
+  padding: 12px 18px;
+  background: linear-gradient(135deg, #1e88e5, #1565c0);
+  color: #ffffff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+button:hover {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+}
+
+/* ===============================
+   RESULT BOX (SAFE / MOD / UNSAFE)
+================================ */
+.result-box {
+  margin-top: 25px;
+  padding: 18px;
+  border-radius: 12px;
+  color: #ffffff;
+  font-weight: bold;
+  font-size: 18px;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.35);
+}
+
+/* ===============================
+   TABLE STYLE
+================================ */
+table {
+  margin: 22px auto;
+  border-collapse: collapse;
+  width: 100%;
+  max-width: 950px;
+  overflow-x: auto;
+  display: block;
+  background: #f1f8ff;
+  border-radius: 10px;
+}
+
+thead {
+  background: #90caf9;
+}
+
+th {
+  padding: 9px;
+  font-size: 13px;
+  font-weight: bold;
+  color: #0d47a1;
+  border: 1px solid #64b5f6;
+}
+
+td {
+  padding: 8px;
+  border: 1px solid #bbdefb;
+  font-size: 12px;
+  color: #0f172a;
+}
+
+/* ===============================
+   CHART AREA
+================================ */
+canvas#crimeChart {
+  max-width: 100%;
+  height: 420px !important;
+  margin: 28px auto;
+  background: #f8fbff;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+/* ===============================
+   RESPONSIVE FIX
+================================ */
+@media (max-width: 768px) {
+  .container {
+    padding: 18px;
+  }
+
+  canvas#crimeChart {
+    height: 320px !important;
+  }
+}
