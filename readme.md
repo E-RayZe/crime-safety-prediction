@@ -65,7 +65,7 @@ The dataset consists of structured government crime statistics stored in CSV for
 - Git (optional)
 
 ### Clone the Repository
-git clone https://github.com/USERNAME/crime-safety-prediction.git
+git clone https://github.com/E-RayZe/crime-safety-prediction
 cd crime-safety-prediction
 
 ### Install Dependencies
